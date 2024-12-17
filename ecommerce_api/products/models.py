@@ -14,7 +14,7 @@ class Category(models.Model):
 class Products(models.Model):
     name = models.CharField(max_length=50, blank=False)
     description = models.TextField(max_length=255)
-    price = models.DecimalField(blank=False)
+    price = models.IntegerField(blank=False)
     category = models.ForeignKey(Category, related_name='type', on_delete=models.CASCADE)
     stock_Quantity = models.IntegerField(blank=False)
     image_URL = models.URLField()
