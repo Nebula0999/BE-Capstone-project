@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.exceptions import ValidationError
+from users.models import User
 
 #def validate_value(value):
     #if value is not True:
@@ -22,6 +23,12 @@ class Products(models.Model):
 
     def __str__(self):
         return self.name
+    
+class Order(models.Model):
+    name = models.CharField(max_length=50)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
 
 
 
