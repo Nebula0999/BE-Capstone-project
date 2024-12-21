@@ -18,7 +18,7 @@ class CustomPagination(PageNumberPagination):
 #from users.models import User
 
 #User = get_user_model
-class ProductsFilter(FilterSet):
+def ProductsFilter(FilterSet):
     class Meta:
         model = Products
         fields = ['id', 'name']
