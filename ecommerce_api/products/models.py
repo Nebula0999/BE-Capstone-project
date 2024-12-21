@@ -17,7 +17,7 @@ class Products(models.Model):
     description = models.TextField(max_length=255)
     price = models.IntegerField(blank=False)
     category = models.ForeignKey(Category, related_name='type', on_delete=models.CASCADE)
-    stock_Quantity = models.IntegerField(blank=False)
+    stock_Quantity = models.PositiveIntegerField(blank=False)
     image_URL = models.URLField()
     created_Date = models.DateTimeField(auto_now=True)
 
@@ -29,7 +29,15 @@ class Order(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=25, default="pending")
 
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="items")
+    product = models.ForeignKey(Products, on_delete=models.CASCADE, related_name="item")
+    quantity = models.PositiveIntegerField()
+
+    def __str__(self):
+        return f"{self.quantity} of {self.product.name}"
 
 
 
