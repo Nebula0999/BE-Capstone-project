@@ -1,10 +1,11 @@
 from rest_framework.routers import DefaultRouter
 from django.urls import path
-from products.views import ProductViewSet, CategoryViewSet, UserViewSet, OrderViewSet, CancelOrderView, OrderItemView
+from products.views import ProductViewSet, CategoryViewSet, UserViewSet, OrderViewSet, ProductListView, OrderItemView
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 router = DefaultRouter()
 
+router.register('view-products', ProductListView, basename='view-products')
 router.register('products', ProductViewSet)
 router.register('users', UserViewSet)
 router.register('orders', OrderViewSet)

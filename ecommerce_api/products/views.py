@@ -24,11 +24,34 @@ def ProductsFilter(FilterSet):
         model = Products
         fields = ['id', 'name']  
 
+class ProductListView(ReadOnlyModelViewSet):
+    queryset = Products.objects.all()
+    serializer_class = ProductSerializer
+    pagination_class = CustomPagination
+
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    search_fields = ['products', 'category']
+
+    def get(self, request, *args, **kwargs):
+       # Get the filtered queryset
+       queryset = self.filter_queryset(self.get_queryset())
+
+       page = self.paginate_queryset(queryset)
+       if page is not None:
+           serializer = self.get_serializer(page, many=True)
+           return self.get_paginated_response(serializer.data)
 
 class ProductViewSet(ModelViewSet):
     queryset = Products.objects.all()
     serializer_class = ProductSerializer
     pagination_class = CustomPagination
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, format=None):
+        content = {
+            'status': 'request was permitted'
+        }
+        return Response(content)
 
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     search_fields = ['products', 'category']
