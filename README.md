@@ -19,3 +19,7 @@ Contains models that handle
 3. Category addition and deletion
 
 It also contains the views that define the viewsets for the models
+
+# api app
+Contains the links to the API views of products and users
+1. 
