@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer, ValidationError
-from products.models import Products, Category, Order, OrderItem
+from products.models import Products, Category, Order, OrderItem, ProductReview
 from users.models import User
 
 class ProductSerializer(ModelSerializer):
@@ -31,3 +31,8 @@ class OrderItemSerializer(ModelSerializer):
         if product.stock < data['quantity']:
             raise ValidationError(f"Not enough stock for product {product.name}.")
         return data
+    
+class ProductReviewSerializer(ModelSerializer):
+    class Meta:
+        model = ProductReview
+        fields = '__all__'

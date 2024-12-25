@@ -7,18 +7,16 @@ from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from rest_framework import filters, status
 from django_filters.rest_framework import DjangoFilterBackend
 from users.models import User
-from api.serializers import ProductSerializer, CategorySerializer, UserSerializer, OrderSerializer, OrderItemSerializer
-from products.models import Products, Order, Category, OrderItem
+from api.serializers import ProductSerializer, CategorySerializer, UserSerializer, OrderSerializer, OrderItemSerializer, ProductReviewSerializer
+from products.models import Products, Order, Category, OrderItem, ProductReview
 from django.core.paginator import Paginator
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from django_filters import FilterSet
 
 class CustomPagination(PageNumberPagination):
-    page_size = 10  
-#from users.models import User
+    page_size = 50  
 
-#User = get_user_model
 def ProductsFilter(FilterSet):
     class Meta:
         model = Products
@@ -72,6 +70,14 @@ class CategoryViewSet(ModelViewSet):
 class OrderViewSet(ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, format=None):
+        content = {
+            'status': 'request was permitted'
+        }
+        return Response(content)
+
     
 class UserViewSet(ReadOnlyModelViewSet):
     queryset = User.objects.all()
@@ -95,22 +101,16 @@ class OrderItemView(ModelViewSet):
         }
         return Response(content)
 
+class ProductReviewSet(ModelViewSet):
+    queryset = ProductReview.objects.all()
+    serializer_class = ProductReviewSerializer
+    permission_classes = [IsAuthenticated]
 
-class CancelOrderView(APIView):
-    def post(self, request, pk):
-        try:
-            order = Order.objects.get(pk=pk)
-            if order.status == 'completed':
-                return Response({"error": "Cannot cancel a completed order."}, status=status.HTTP_400_BAD_REQUEST)
+    def get(self, request, format=None):
+        content = {
+            'status': 'request was permitted'
+        }
+        return Response(content)
+        
 
-            for item in order.items.all():
-                product = item.product
-                product.stock += item.quantity
-                product.save()
-
-            order.status = 'canceled'
-            order.save()
-            return Response({"message": "Order canceled and stock restored."}, status=status.HTTP_200_OK)
-        except Order.DoesNotExist:
-            return Response({"error": "Order not found."}, status=status.HTTP_404_NOT_FOUND)
 # Create your views here.
