@@ -3,6 +3,4 @@ djangorestframework
 djangorestframework-simplejwt
 
 
-/home/Cloudtr/BE-Capstone-project
-
 ecommerce_api
